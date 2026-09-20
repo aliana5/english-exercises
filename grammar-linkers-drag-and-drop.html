@@ -923,7 +923,7 @@
     }
 
     function updateGapContents() {
-      gaps.forEach(function (gap) {
+      gaps.forEach(function (gap, index) {
         const slot = document.querySelector('.gap-slot[data-gap-id="' + gap.id + '"]');
         if (!slot) return;
 
@@ -934,13 +934,13 @@
         const tokenId = placements[gap.id];
         if (tokenId) {
           slot.appendChild(makeWordCard(tokenId, gap.id));
-          slot.setAttribute("aria-label", "Gap " + gap.number + ": " + displayText(tokenId, gap.id));
+          slot.setAttribute("aria-label", "Gap " + (index + 1) + ": " + displayText(tokenId, gap.id));
         } else {
           const placeholder = document.createElement("span");
           placeholder.className = "gap-placeholder";
           placeholder.textContent = "Tap / drop here";
           slot.appendChild(placeholder);
-          slot.setAttribute("aria-label", "Gap " + gap.number + ". Empty.");
+          slot.setAttribute("aria-label", "Gap " + (index + 1) + ". Empty.");
         }
 
         slot.classList.toggle("locked", locked || gapConfirmed(gap.id));
