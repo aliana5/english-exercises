@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Grammar: Linkers of addition, contrast, reason &amp; result (3)</title>
+  <style>
+    :root {
+      --navy: #102a43;
+      --navy-2: #174f73;
+      --blue: #1769aa;
+      --orange: #ee5a00;
+      --orange-dark: #c94c00;
+      --green: #168653;
+      --green-soft: #eaf8f1;
+      --tile: #bfe7d7;
+      --tile-border: #67a894;
+      --red: #c23d30;
+      --red-soft: #fff1ee;
+      --ink: #17212f;
+      --muted: #667085;
+      --line: #d5dfe7;
+      --page: #edf3f8;
+      --white: #ffffff;
+      --shadow: 0 18px 50px rgba(16, 42, 67, .13);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 7% 0%, #dff1ff 0, transparent 29rem),
+        var(--page);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    button, input { font: inherit; }
+
+    .page {
+      width: min(1180px, calc(100% - 30px));
+      margin: 28px auto;
+      overflow: hidden;
+      border-radius: 23px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .header {
+      position: relative;
+      padding: 36px 52px 31px;
+      overflow: hidden;
+      color: var(--white);
+      background: linear-gradient(125deg, var(--navy) 0%, var(--navy-2) 70%, #187ca9 100%);
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      top: -105px;
+      right: -55px;
+      width: 300px;
+      height: 300px;
+      border: 42px solid rgba(255, 255, 255, .08);
+      border-radius: 50%;
+    }
+
+    .unit {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 7px;
+      color: #bceaff;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0;
+      font-size: clamp(29px, 4vw, 46px);
+      line-height: 1.12;
+      letter-spacing: -.025em;
+    }
+
+    .content { padding: 32px 52px 46px; }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1fr minmax(230px, 290px);
+      gap: 22px;
+      align-items: end;
+    }
+
+    .instruction {
+      margin: 0 0 5px;
+      color: var(--navy);
+      font-size: clamp(21px, 2.5vw, 28px);
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .name-field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .name-field input {
+      width: 100%;
+      min-height: 46px;
+      padding: 9px 13px;
+      border: 1.5px solid #afbdc9;
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+    }
+
+    .name-field input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(23, 105, 170, .12);
+    }
+
+    .name-field input:disabled {
+      color: var(--ink);
+      background: #f7f9fb;
+      opacity: 1;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin: 22px 0 17px;
+      padding: 11px 15px;
+      border: 1px solid #d9e5ee;
+      border-radius: 11px;
+      color: var(--navy);
+      background: #f6fbff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .attempt {
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: var(--blue);
+      background: #e7f3fc;
+      white-space: nowrap;
+    }
+
+    .message {
+      display: none;
+      margin: 0 0 17px;
+      padding: 12px 15px;
+      border-radius: 10px;
+      color: #932d22;
+      background: var(--red-soft);
+      font-weight: 700;
+    }
+
+    .message.show { display: block; }
+
+    .sentence-list {
+      display: grid;
+      gap: 15px;
+    }
+
+    .sentence-row {
+      padding: 17px;
+      border: 1.5px solid var(--line);
+      border-radius: 15px;
+      background: #fff;
+      transition: border-color .15s ease, background .15s ease;
+    }
+
+    .sentence-row.was-correct {
+      border-color: #4dac7b;
+      background: #f8fffb;
+    }
+
+    .sentence-row.was-wrong {
+      border-color: #dc7467;
+      background: #fff9f7;
+    }
+
+    .row-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 11px;
+    }
+
+    .row-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .sentence-number {
+      display: grid;
+      place-items: center;
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--navy);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .was-correct .sentence-number { background: var(--green); }
+    .was-wrong .sentence-number { background: var(--red); }
+
+    .row-result {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .was-correct .row-result { color: var(--green); }
+    .was-wrong .row-result { color: var(--red); }
+
+    .reset-row {
+      padding: 5px 9px;
+      border: 0;
+      border-radius: 7px;
+      color: var(--blue);
+      background: #e8f3fc;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .reset-row:hover { background: #d9edf9; }
+    .reset-row:focus-visible { outline: 3px solid rgba(23, 105, 170, .22); outline-offset: 2px; }
+
+    .token-tray {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      min-height: 68px;
+      padding: 12px;
+      border: 2px dashed #abc0cf;
+      border-radius: 12px;
+      background: #f8fbfd;
+      transition: border-color .15s ease, background .15s ease;
+    }
+
+    .token-tray.has-selection {
+      border-color: #eb9a61;
+      background: #fffaf4;
+    }
+
+    .token-tray.drag-over {
+      border-color: var(--orange);
+      background: #fff3e7;
+    }
+
+    .word-tile {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 47px;
+      max-width: 100%;
+      padding: 6px 7px 6px 31px;
+      border: 1.5px solid var(--tile-border);
+      border-radius: 10px;
+      color: #103f32;
+      background: var(--tile);
+      box-shadow: 0 3px 0 rgba(28, 117, 88, .16);
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.22;
+      white-space: nowrap;
+      cursor: grab;
+      user-select: none;
+      touch-action: manipulation;
+      transition: transform .13s ease, box-shadow .13s ease, border-color .13s ease, background .13s ease;
+    }
+
+    .tile-label {
+      padding: 3px 7px 3px 0;
+      pointer-events: none;
+    }
+
+    .tile-actions {
+      display: inline-flex;
+      gap: 4px;
+      margin-left: 2px;
+    }
+
+    .tile-move {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border: 1px solid #579783;
+      border-radius: 7px;
+      color: #103f32;
+      background: rgba(255, 255, 255, .72);
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .tile-move:hover { background: #fff; }
+    .tile-move:disabled { opacity: .32; cursor: default; }
+    .tile-move:focus-visible { outline: 3px solid rgba(23, 105, 170, .25); outline-offset: 1px; }
+
+    .word-tile::before {
+      content: "⋮⋮";
+      position: absolute;
+      left: 9px;
+      top: 50%;
+      transform: translateY(-51%);
+      color: #397767;
+      font-size: 15px;
+      letter-spacing: -4px;
+    }
+
+    .word-tile:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 0 rgba(28, 117, 88, .16);
+    }
+
+    .word-tile:active { cursor: grabbing; }
+
+    .word-tile:focus-visible {
+      outline: 4px solid rgba(23, 105, 170, .22);
+      outline-offset: 2px;
+    }
+
+    .word-tile.selected {
+      border-color: var(--orange);
+      color: #783a0c;
+      background: #fff0dc;
+      box-shadow: 0 0 0 4px rgba(238, 90, 0, .14);
+      transform: translateY(-1px);
+    }
+
+    .word-tile.dragging { opacity: .45; }
+
+    .word-tile.drop-before::after,
+    .word-tile.drop-after::after {
+      content: "";
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      width: 4px;
+      border-radius: 4px;
+      background: var(--orange);
+    }
+
+    .word-tile.drop-before::after { left: -7px; }
+    .word-tile.drop-after::after { right: -7px; }
+
+    .end-zone {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      min-height: 43px;
+      padding: 8px 11px;
+      border: 1.5px dashed #d4864d;
+      border-radius: 9px;
+      color: #9b4a11;
+      background: #fff7ed;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .has-selection .end-zone,
+    .token-tray.drag-over .end-zone { display: inline-flex; }
+    .end-zone:hover { background: #ffead4; }
+
+    .locked .word-tile {
+      cursor: default;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    .locked .word-tile::before { display: none; }
+    .locked .word-tile { padding: 9px 15px; }
+
+    .interaction-note {
+      min-height: 23px;
+      margin: 11px 2px 0;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .result {
+      display: none;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      align-items: center;
+      margin: 0 0 20px;
+      padding: 21px 23px;
+      border: 2px solid;
+      border-radius: 15px;
+    }
+
+    .result.show { display: grid; }
+    .result.success { border-color: #38a36d; background: linear-gradient(135deg, #e8f8ef, #f9fffb); }
+    .result.failure { border-color: #e78776; background: linear-gradient(135deg, #fff0ec, #fffaf8); }
+
+    .score {
+      display: grid;
+      place-items: center;
+      width: 106px;
+      height: 106px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--navy);
+      box-shadow: inset 0 0 0 7px rgba(255, 255, 255, .18);
+      text-align: center;
+    }
+
+    .success .score { background: var(--green); }
+    .failure .score { background: var(--red); }
+    .percentage { display: block; font-size: 29px; line-height: 1; font-weight: 900; }
+    .fraction { display: block; margin-top: 5px; font-size: 14px; font-weight: 800; }
+    .result-title { margin: 0 0 4px; color: var(--navy); font-size: 25px; }
+    .result-text { margin: 0; font-size: 16px; }
+    .result-meta { margin: 8px 0 0; color: var(--muted); font-size: 13px; font-weight: 700; }
+
+    .answer-review {
+      display: none;
+      margin-top: 19px;
+      padding: 20px;
+      border: 1px solid #d7e2ea;
+      border-radius: 14px;
+      background: #f8fbfd;
+    }
+
+    .answer-review.show { display: block; }
+    .answer-review h3 { margin: 0 0 13px; color: var(--navy); font-size: 19px; }
+
+    .review-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px 13px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .review-item {
+      padding: 10px 12px;
+      border-radius: 9px;
+      color: #12653f;
+      background: var(--green-soft);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .review-item.was-wrong { color: #982d23; background: var(--red-soft); }
+    .review-item small { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; font-weight: 700; }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 11px;
+      margin-top: 23px;
+    }
+
+    .action-button {
+      min-height: 48px;
+      padding: 11px 22px;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform .15s ease, background .15s ease;
+    }
+
+    .action-button:hover { transform: translateY(-1px); }
+    .action-button:focus-visible { outline: 4px solid rgba(23, 105, 170, .25); outline-offset: 2px; }
+    .primary { color: #fff; background: var(--orange); }
+    .primary:hover { background: var(--orange-dark); }
+    .secondary { color: var(--navy); background: #e7eef4; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 760px) {
+      .page { width: min(100% - 18px, 1180px); margin: 9px auto; border-radius: 15px; }
+      .header, .content { padding-left: 20px; padding-right: 20px; }
+      .header { padding-top: 28px; }
+      .intro { grid-template-columns: 1fr; }
+      .sentence-row { padding: 14px; }
+      .token-tray { gap: 8px; padding: 10px; }
+      .word-tile { min-height: 49px; padding: 6px 6px 6px 29px; font-size: 16px; white-space: normal; }
+      .locked .word-tile { padding: 9px 13px; }
+      .row-head { align-items: flex-start; }
+      .review-list { grid-template-columns: 1fr; }
+      .result.show { grid-template-columns: 1fr; text-align: center; }
+      .score { margin: 0 auto; }
+      .actions { justify-content: stretch; }
+      .action-button { flex: 1; }
+    }
+
+    @media (max-width: 440px) {
+      .toolbar { align-items: flex-start; }
+      .row-result { display: block; margin-top: 3px; }
+      .reset-row { flex: 0 0 auto; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { width: 100%; margin: 0; box-shadow: none; }
+      .actions, .hint, .interaction-note, .reset-row { display: none !important; }
+      .sentence-row, .answer-review, .result { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <p class="unit" id="unitLabel"></p>
+      <h1 id="quizTitle"></h1>
+    </header>
+
+    <section class="content">
+      <div class="intro">
+        <div>
+          <h2 class="instruction" id="instruction"></h2>
+          <p class="hint">Drag the boxes, tap two boxes to swap them, or use the ← → buttons on each box.</p>
+        </div>
+        <div class="name-field">
+          <label for="studentName">Student name (for the final screenshot)</label>
+          <input id="studentName" type="text" maxlength="60" placeholder="Enter your name" autocomplete="name">
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <span id="progressText">Moves made: 0 · Arrange all 6 sentences</span>
+        <span class="attempt" id="attemptBadge">Attempt 1</span>
+      </div>
+
+      <div class="message" id="message" role="alert"></div>
+
+      <section class="result" id="resultPanel" aria-live="polite">
+        <div class="score">
+          <div>
+            <span class="percentage" id="percentage">0%</span>
+            <span class="fraction" id="fraction">0/6</span>
+          </div>
+        </div>
+        <div>
+          <h2 class="result-title" id="resultTitle"></h2>
+          <p class="result-text" id="resultText"></p>
+          <p class="result-meta" id="resultMeta"></p>
+        </div>
+      </section>
+
+      <form id="quizForm" novalidate>
+        <div class="sentence-list" id="sentenceList"></div>
+        <p class="interaction-note" id="interactionNote" aria-live="polite">Tip: drag a box, or tap one box and then another to swap them.</p>
+
+        <section class="answer-review" id="answerReview" aria-live="polite">
+          <h3>Correct sentences</h3>
+          <ol class="review-list" id="reviewList"></ol>
+        </section>
+
+        <div class="actions">
+          <button class="action-button primary" id="checkButton" type="submit">✓ Check answers</button>
+          <button class="action-button secondary hidden" id="retryButton" type="button">Try again</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    /* ===========================================================
+       TEACHER EDITING AREA
+       shuffled = the starting order shown to students.
+       correct = the answer key. Every phrase must appear once in both arrays.
+       =========================================================== */
+    const settings = {
+      title: "Grammar: Linkers of addition, contrast, reason & result (3)",
+      unit: "STUDIO Advanced | Unit 5A",
+      instruction: "Put the words in the correct order to make sentences."
+    };
+
+    const sentenceSets = [
+      {
+        id: "s1",
+        shuffled: ["but", "results", "them", "were", "The", "we", "inconclusive,", "nonetheless.", "published"],
+        correct: ["The", "results", "were", "inconclusive,", "but", "we", "published", "them", "nonetheless."]
+      },
+      {
+        id: "s2",
+        shuffled: ["fact", "all the credit", "got", "made", "despite", "the discovery.", "that", "My boss", "I", "the"],
+        correct: ["My boss", "got", "all the credit", "despite", "the", "fact", "that", "I", "made", "the discovery."]
+      },
+      {
+        id: "s3",
+        shuffled: ["overlooked", "to", "was", "me", "a lab assistant.", "owing", "My work", "being"],
+        correct: ["My work", "was", "overlooked", "owing", "to", "me", "being", "a lab assistant."]
+      },
+      {
+        id: "s4",
+        shuffled: ["overtime.", "also", "contribution,", "from", "Apart", "an important", "making", "I", "worked"],
+        correct: ["Apart", "from", "making", "an important", "contribution,", "I", "also", "worked", "overtime."]
+      },
+      {
+        id: "s5",
+        shuffled: ["The director", "thanked", "official recognition.", "was", "me,", "what", "whereas", "I", "wanted"],
+        correct: ["The director", "thanked", "me,", "whereas", "what", "I", "wanted", "was", "official recognition."]
+      },
+      {
+        id: "s6",
+        shuffled: ["said", "it", "experience.", "an interesting", "learning", "was", "Having", "that,"],
+        correct: ["Having", "said", "that,", "it", "was", "an interesting", "learning", "experience."]
+      }
+    ];
+
+    sentenceSets.forEach(function (sentence) {
+      sentence.pieces = sentence.shuffled.map(function (text, index) {
+        return { id: sentence.id + "-p" + index, text: text };
+      });
+
+      sentence.answerIds = sentence.correct.map(function (text) {
+        const piece = sentence.pieces.find(function (item) { return item.text === text; });
+        if (!piece) throw new Error("Missing phrase in " + sentence.id + ": " + text);
+        return piece.id;
+      });
+    });
+
+    const sentenceMap = new Map(sentenceSets.map(function (sentence) { return [sentence.id, sentence]; }));
+    const state = {};
+    sentenceSets.forEach(function (sentence) {
+      state[sentence.id] = sentence.pieces.map(function (piece) { return piece.id; });
+    });
+
+    const form = document.getElementById("quizForm");
+    const sentenceList = document.getElementById("sentenceList");
+    const studentName = document.getElementById("studentName");
+    const message = document.getElementById("message");
+    const interactionNote = document.getElementById("interactionNote");
+    const resultPanel = document.getElementById("resultPanel");
+    const answerReview = document.getElementById("answerReview");
+    const reviewList = document.getElementById("reviewList");
+    const checkButton = document.getElementById("checkButton");
+    const retryButton = document.getElementById("retryButton");
+
+    let attempt = 1;
+    let moveCount = 0;
+    let locked = false;
+    let selected = null;
+    let dragged = null;
+    let lastResults = null;
+
+    document.title = settings.title;
+    document.getElementById("quizTitle").textContent = settings.title;
+    document.getElementById("unitLabel").textContent = settings.unit;
+    document.getElementById("instruction").textContent = settings.instruction;
+
+    function pieceFor(sentenceId, pieceId) {
+      return sentenceMap.get(sentenceId).pieces.find(function (piece) { return piece.id === pieceId; });
+    }
+
+    function textOrder(sentenceId, ids) {
+      return ids.map(function (pieceId) { return pieceFor(sentenceId, pieceId).text; }).join(" ");
+    }
+
+    function sameOrder(first, second) {
+      return first.length === second.length && first.every(function (value, index) { return value === second[index]; });
+    }
+
+    function sentenceConfirmed(sentenceId) {
+      if (!lastResults) return false;
+      const index = sentenceSets.findIndex(function (sentence) { return sentence.id === sentenceId; });
+      return index >= 0 && lastResults[index].correct;
+    }
+
+    function hideMessage() {
+      message.textContent = "";
+      message.classList.remove("show");
+    }
+
+    function showMessage(text) {
+      message.textContent = text;
+      message.classList.add("show");
+    }
+
+    function clearDropMarks() {
+      document.querySelectorAll(".drop-before, .drop-after, .drag-over").forEach(function (element) {
+        element.classList.remove("drop-before", "drop-after", "drag-over");
+      });
+    }
+
+    function updateToolbar() {
+      document.getElementById("progressText").textContent = locked && lastResults
+        ? lastResults.filter(function (result) { return result.correct; }).length + "/" + sentenceSets.length + " sentences correct on this attempt"
+        : "Moves made: " + moveCount + " · Arrange all " + sentenceSets.length + " sentences";
+    }
+
+    function setSelected(sentenceId, pieceId) {
+      if (locked) return;
+      if (selected && selected.sentenceId === sentenceId && selected.pieceId === pieceId) {
+        selected = null;
+      } else {
+        selected = { sentenceId: sentenceId, pieceId: pieceId };
+      }
+      renderSelection();
+    }
+
+    function renderSelection() {
+      document.querySelectorAll(".word-tile").forEach(function (tile) {
+        const active = Boolean(selected) && tile.dataset.sentenceId === selected.sentenceId && tile.dataset.pieceId === selected.pieceId;
+        tile.classList.toggle("selected", active);
+        tile.setAttribute("aria-pressed", String(active));
+      });
+
+      document.querySelectorAll(".token-tray").forEach(function (tray) {
+        tray.classList.toggle("has-selection", Boolean(selected) && tray.dataset.sentenceId === selected.sentenceId);
+      });
+
+      if (locked) {
+        interactionNote.textContent = "";
+      } else if (selected) {
+        const piece = pieceFor(selected.sentenceId, selected.pieceId);
+        interactionNote.textContent = "Selected: “" + piece.text + "”. Tap another box in the same sentence to swap them.";
+      } else {
+        interactionNote.textContent = "Tip: drag a box, or tap one box and then another to swap them.";
+      }
+    }
+
+    function swapPieces(sentenceId, firstId, secondId) {
+      if (locked || sentenceConfirmed(sentenceId) || firstId === secondId) return;
+      const order = state[sentenceId];
+      const firstIndex = order.indexOf(firstId);
+      const secondIndex = order.indexOf(secondId);
+      if (firstIndex < 0 || secondIndex < 0) return;
+      order[firstIndex] = secondId;
+      order[secondIndex] = firstId;
+      moveCount += 1;
+      selected = null;
+      dragged = null;
+      hideMessage();
+      renderSentences(secondId);
+    }
+
+    function moveRelative(sentenceId, sourceId, targetId, placeAfter) {
+      if (locked || sentenceConfirmed(sentenceId) || sourceId === targetId) return;
+      const order = state[sentenceId];
+      const sourceIndex = order.indexOf(sourceId);
+      if (sourceIndex < 0 || order.indexOf(targetId) < 0) return;
+
+      order.splice(sourceIndex, 1);
+      let targetIndex = order.indexOf(targetId);
+      if (placeAfter) targetIndex += 1;
+      order.splice(targetIndex, 0, sourceId);
+
+      moveCount += 1;
+      selected = null;
+      dragged = null;
+      hideMessage();
+      renderSentences(sourceId);
+    }
+
+    function moveToEnd(sentenceId, pieceId) {
+      if (locked || sentenceConfirmed(sentenceId)) return;
+      const order = state[sentenceId];
+      const index = order.indexOf(pieceId);
+      if (index < 0 || index === order.length - 1) {
+        selected = null;
+        dragged = null;
+        renderSelection();
+        return;
+      }
+      order.splice(index, 1);
+      order.push(pieceId);
+      moveCount += 1;
+      selected = null;
+      dragged = null;
+      hideMessage();
+      renderSentences(pieceId);
+    }
+
+    function nudgePiece(sentenceId, pieceId, direction) {
+      if (locked || sentenceConfirmed(sentenceId)) return;
+      const order = state[sentenceId];
+      const index = order.indexOf(pieceId);
+      const targetIndex = Math.max(0, Math.min(order.length - 1, index + direction));
+      if (index < 0 || targetIndex === index) return;
+      const temporary = order[targetIndex];
+      order[targetIndex] = pieceId;
+      order[index] = temporary;
+      moveCount += 1;
+      selected = null;
+      dragged = null;
+      renderSentences(pieceId);
+    }
+
+    function makeTile(sentenceId, pieceId) {
+      const piece = pieceFor(sentenceId, pieceId);
+      const confirmed = sentenceConfirmed(sentenceId);
+      const tile = document.createElement("div");
+      tile.className = "word-tile";
+      tile.dataset.sentenceId = sentenceId;
+      tile.dataset.pieceId = pieceId;
+      tile.draggable = !locked && !confirmed;
+      tile.tabIndex = locked || confirmed ? -1 : 0;
+      tile.setAttribute("role", "group");
+      tile.setAttribute("aria-pressed", "false");
+      tile.setAttribute("aria-label", "Move phrase: " + piece.text);
+
+      const label = document.createElement("span");
+      label.className = "tile-label";
+      label.textContent = piece.text;
+      tile.appendChild(label);
+
+      if (!locked && !confirmed) {
+        const controls = document.createElement("span");
+        controls.className = "tile-actions";
+        const order = state[sentenceId];
+        const position = order.indexOf(pieceId);
+
+        [
+          { symbol: "←", direction: -1, disabled: position === 0, label: "Move " + piece.text + " one place left" },
+          { symbol: "→", direction: 1, disabled: position === order.length - 1, label: "Move " + piece.text + " one place right" }
+        ].forEach(function (control) {
+          const button = document.createElement("button");
+          button.className = "tile-move";
+          button.type = "button";
+          button.textContent = control.symbol;
+          button.disabled = control.disabled;
+          button.setAttribute("aria-label", control.label);
+          button.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            nudgePiece(sentenceId, pieceId, control.direction);
+          });
+          button.addEventListener("keydown", function (event) { event.stopPropagation(); });
+          controls.appendChild(button);
+        });
+        tile.appendChild(controls);
+      }
+
+      tile.addEventListener("click", function (event) {
+        if (event.target.closest(".tile-actions")) return;
+        if (locked || confirmed) return;
+        if (selected && selected.sentenceId !== sentenceId) {
+          showMessage("Swap boxes only within the same sentence.");
+          return;
+        }
+        if (selected && selected.pieceId !== pieceId) {
+          swapPieces(sentenceId, selected.pieceId, pieceId);
+        } else {
+          hideMessage();
+          setSelected(sentenceId, pieceId);
+        }
+      });
+
+      tile.addEventListener("keydown", function (event) {
+        if (event.target.closest(".tile-move")) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          tile.click();
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          nudgePiece(sentenceId, pieceId, -1);
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          nudgePiece(sentenceId, pieceId, 1);
+        } else if (event.key === "End") {
+          event.preventDefault();
+          moveToEnd(sentenceId, pieceId);
+        }
+      });
+
+      tile.addEventListener("dragstart", function (event) {
+        if (locked || confirmed) {
+          event.preventDefault();
+          return;
+        }
+        dragged = { sentenceId: sentenceId, pieceId: pieceId };
+        tile.classList.add("dragging");
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", sentenceId + "|" + pieceId);
+      });
+
+      tile.addEventListener("dragover", function (event) {
+        if (!dragged || dragged.sentenceId !== sentenceId || dragged.pieceId === pieceId || locked) return;
+        event.preventDefault();
+        event.stopPropagation();
+        tile.classList.remove("drop-before", "drop-after");
+        const bounds = tile.getBoundingClientRect();
+        const after = event.clientX > bounds.left + bounds.width / 2;
+        tile.classList.add(after ? "drop-after" : "drop-before");
+        event.dataTransfer.dropEffect = "move";
+      });
+
+      tile.addEventListener("dragleave", function () {
+        tile.classList.remove("drop-before", "drop-after");
+      });
+
+      tile.addEventListener("drop", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!dragged || dragged.sentenceId !== sentenceId || locked) return;
+        const after = tile.classList.contains("drop-after");
+        clearDropMarks();
+        moveRelative(sentenceId, dragged.pieceId, pieceId, after);
+      });
+
+      tile.addEventListener("dragend", function () {
+        dragged = null;
+        clearDropMarks();
+        document.querySelectorAll(".word-tile.dragging").forEach(function (item) {
+          item.classList.remove("dragging");
+        });
+      });
+
+      return tile;
+    }
+
+    function makeSentenceRow(sentence, index) {
+      const confirmed = sentenceConfirmed(sentence.id);
+      const row = document.createElement("section");
+      row.className = "sentence-row" + (locked || confirmed ? " locked" : "");
+      row.dataset.sentenceId = sentence.id;
+
+      if (lastResults) {
+        row.classList.add(lastResults[index].correct ? "was-correct" : "was-wrong");
+      }
+
+      const head = document.createElement("div");
+      head.className = "row-head";
+
+      const title = document.createElement("div");
+      title.className = "row-title";
+      const number = document.createElement("span");
+      number.className = "sentence-number";
+      number.textContent = String(index + 1);
+      const label = document.createElement("span");
+      label.textContent = "Sentence " + (index + 1);
+      const status = document.createElement("span");
+      status.className = "row-result";
+      status.textContent = lastResults
+        ? (lastResults[index].correct ? "✓ Correct" : "Try this sentence again")
+        : "Reorder the boxes";
+      title.appendChild(number);
+      title.appendChild(label);
+      title.appendChild(status);
+
+      const reset = document.createElement("button");
+      reset.className = "reset-row" + (locked || confirmed ? " hidden" : "");
+      reset.type = "button";
+      reset.textContent = "↺ Reset row";
+      reset.setAttribute("aria-label", "Reset sentence " + (index + 1));
+      reset.addEventListener("click", function () {
+        state[sentence.id] = sentence.pieces.map(function (piece) { return piece.id; });
+        selected = null;
+        hideMessage();
+        renderSentences();
+      });
+
+      head.appendChild(title);
+      head.appendChild(reset);
+
+      const tray = document.createElement("div");
+      tray.className = "token-tray";
+      tray.dataset.sentenceId = sentence.id;
+      tray.setAttribute("aria-label", "Sentence " + (index + 1) + " word boxes");
+
+      state[sentence.id].forEach(function (pieceId) {
+        tray.appendChild(makeTile(sentence.id, pieceId));
+      });
+
+      const endZone = document.createElement("button");
+      endZone.className = "end-zone";
+      endZone.type = "button";
+      endZone.textContent = "Move to end";
+      endZone.setAttribute("aria-label", "Move the selected box to the end of this sentence");
+      endZone.addEventListener("click", function (event) {
+        event.stopPropagation();
+        if (!confirmed && selected && selected.sentenceId === sentence.id) moveToEnd(sentence.id, selected.pieceId);
+      });
+      endZone.addEventListener("dragover", function (event) {
+        if (dragged && dragged.sentenceId === sentence.id && !locked && !confirmed) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      });
+      endZone.addEventListener("drop", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (dragged && dragged.sentenceId === sentence.id && !locked && !confirmed) moveToEnd(sentence.id, dragged.pieceId);
+      });
+      tray.appendChild(endZone);
+
+      tray.addEventListener("dragover", function (event) {
+        if (dragged && dragged.sentenceId === sentence.id && !locked && !confirmed) {
+          event.preventDefault();
+          tray.classList.add("drag-over");
+        }
+      });
+      tray.addEventListener("dragleave", function (event) {
+        if (!tray.contains(event.relatedTarget)) tray.classList.remove("drag-over");
+      });
+      tray.addEventListener("drop", function (event) {
+        if (!dragged || dragged.sentenceId !== sentence.id || locked || confirmed) return;
+        event.preventDefault();
+        tray.classList.remove("drag-over");
+        if (event.target === tray) moveToEnd(sentence.id, dragged.pieceId);
+      });
+
+      row.appendChild(head);
+      row.appendChild(tray);
+      return row;
+    }
+
+    function renderSentences(focusPieceId) {
+      sentenceList.innerHTML = "";
+      sentenceSets.forEach(function (sentence, index) {
+        sentenceList.appendChild(makeSentenceRow(sentence, index));
+      });
+      updateToolbar();
+      renderSelection();
+
+      if (focusPieceId && !locked) {
+        const tile = document.querySelector('.word-tile[data-piece-id="' + focusPieceId + '"]');
+        if (tile) tile.focus({ preventScroll: true });
+      }
+    }
+
+    function dateTime() {
+      try {
+        return new Date().toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+      } catch (error) {
+        return new Date().toLocaleString();
+      }
+    }
+
+    function renderReview(results) {
+      reviewList.innerHTML = "";
+      sentenceSets.forEach(function (sentence, index) {
+        const result = results[index];
+        const item = document.createElement("li");
+        item.className = "review-item" + (result.correct ? "" : " was-wrong");
+        item.textContent = (result.correct ? "✓ " : "✕ ") + (index + 1) + ". " + textOrder(sentence.id, sentence.answerIds);
+
+        const detail = document.createElement("small");
+        detail.textContent = result.correct
+          ? "Correct on this attempt."
+          : "Your order: " + result.enteredText;
+        item.appendChild(detail);
+        reviewList.appendChild(item);
+      });
+      answerReview.classList.add("show");
+    }
+
+    function checkSentences() {
+      if (locked) return;
+      hideMessage();
+      selected = null;
+
+      const results = sentenceSets.map(function (sentence) {
+        return {
+          correct: sameOrder(state[sentence.id], sentence.answerIds),
+          enteredText: textOrder(sentence.id, state[sentence.id])
+        };
+      });
+      lastResults = results;
+
+      const score = results.filter(function (result) { return result.correct; }).length;
+      const perfect = score === sentenceSets.length;
+      const percent = Math.round(score / sentenceSets.length * 100);
+
+      locked = perfect;
+      studentName.disabled = perfect;
+      renderSentences();
+
+      document.getElementById("percentage").textContent = percent + "%";
+      document.getElementById("fraction").textContent = score + "/" + sentenceSets.length;
+      resultPanel.className = "result show " + (perfect ? "success" : "failure");
+      const mistakes = sentenceSets.length - score;
+      document.getElementById("resultTitle").textContent = perfect ? "Completed successfully" : mistakes + " " + (mistakes === 1 ? "mistake" : "mistakes");
+      document.getElementById("resultText").textContent = perfect
+        ? "All 6 sentences are correct. Take a screenshot of this result and send it to your teacher."
+        : "Correct sentences stay green and locked. Reorder only the remaining sentences, then check again. The correct order is not shown.";
+
+      const name = studentName.value.trim();
+      document.getElementById("resultMeta").textContent = (name ? name + " · " : "") + "Attempt " + attempt + " · " + dateTime();
+
+      answerReview.classList.remove("show");
+      reviewList.innerHTML = "";
+      checkButton.classList.toggle("hidden", perfect);
+      checkButton.textContent = perfect ? "✓ Check answers" : "✓ Check again";
+      retryButton.className = perfect ? "action-button secondary" : "action-button secondary hidden";
+      retryButton.textContent = "Start over";
+      if (!perfect) {
+        attempt += 1;
+        document.getElementById("attemptBadge").textContent = "Attempt " + attempt;
+      }
+      resultPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function resetAttempt() {
+      attempt += 1;
+      moveCount = 0;
+      locked = false;
+      selected = null;
+      dragged = null;
+      lastResults = null;
+      studentName.disabled = false;
+      sentenceSets.forEach(function (sentence) {
+        state[sentence.id] = sentence.pieces.map(function (piece) { return piece.id; });
+      });
+
+      document.getElementById("attemptBadge").textContent = "Attempt " + attempt;
+      resultPanel.className = "result";
+      answerReview.classList.remove("show");
+      reviewList.innerHTML = "";
+      checkButton.classList.remove("hidden");
+      checkButton.textContent = "✓ Check answers";
+      retryButton.className = "action-button secondary hidden";
+      hideMessage();
+      renderSentences();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      checkSentences();
+    });
+
+    retryButton.addEventListener("click", resetAttempt);
+    renderSentences();
+  </script>
+</body>
+</html>
